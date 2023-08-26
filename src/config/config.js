@@ -35,11 +35,11 @@ module.exports = {
     dialect:  "postgres",
   },
   production: {
-    username:"root",
-    password: "oihyXIsOtR8wQvl2qWrfXlv9HL9Ng1oz",
-    database: "ecommerce_s5xi",
-    host:"dpg-cj9ilv63ttrc73ct99r0-a",
-    dialect:"postgres",
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
   },
   staging: {
     username: process.env.DB_USERNAME,
