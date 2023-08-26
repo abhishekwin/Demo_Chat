@@ -28,10 +28,10 @@ dotenv.config();
 
 module.exports = {
   development: {
-    username: "abhishek",
-    password:"abhishek",
-    database: "demo_react",
-    host: "localhost",
+    username: "root",
+    password:"oihyXIsOtR8wQvl2qWrfXlv9HL9Ng1oz",
+    database: "ecommerce_s5xi",
+    host: "dpg-cj9ilv63ttrc73ct99r0-a",
     dialect:  "postgres",
   },
   production: {
