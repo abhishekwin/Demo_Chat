@@ -4,18 +4,9 @@ const { Sequelize } = require("sequelize");
 
 require("dotenv").config();
 
-const dbConfig = require("../config/config");
+
+const dbConfig = require("../config/db.config");  
 const sequelize = new Sequelize(dbConfig.development);
-
-// sequelize
-//   .authenticate()
-//   .then(function (err) {
-//     console.log("Connection has been established successfully.");
-//   })
-//   .catch(function (err) {
-//     console.log("Unable to connect to the database:", err);
-//   });
-
 const db = {};
 
 readdirSync(__dirname)
@@ -39,6 +30,8 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
+
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
