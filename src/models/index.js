@@ -51,7 +51,7 @@ const { Sequelize } = require("sequelize");
 
 require("dotenv").config();
 
-const dbConfig = require("../config/config.json");
+const dbConfig = require("../config/config");
 const sequelize = new Sequelize(dbConfig.production);
 
 // sequelize
