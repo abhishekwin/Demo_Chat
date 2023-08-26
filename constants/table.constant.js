@@ -1,7 +1,7 @@
 const TableConstants = {
   USER_DETAILS: {
     modelName: "User",
-    tableName: "Userss",
+    tableName: "Users",
   },
   CHAT_DETAILS: {
     modelName: "Chat",

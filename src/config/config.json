@@ -15,9 +15,9 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "password": "oihyXIsOtR8wQvl2qWrfXlv9HL9Ng1oz",
+    "database": "ecommerce_s5xi",
+    "host": "dpg-cj9ilv63ttrc73ct99r0-a",
+    "dialect": "postgres"
   }
 }

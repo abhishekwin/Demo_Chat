@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon main.js",
+    "start": "bash bash_run.sh",
     "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
