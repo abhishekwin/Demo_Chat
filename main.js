@@ -12,6 +12,11 @@ const db = require("./src/models/index");
 const startServer = async () => {
   try {
     await db.authenticate();
+    app.use(
+      cors({
+        origin: "*",
+      }),
+    );
     app.use("/api", router); 
 
     app.listen(port, () => {
