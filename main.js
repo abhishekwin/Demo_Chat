@@ -3,6 +3,7 @@ const express = require("express");
 const port = 3000;
 const app = express();
 const router = require("./src/router/index");
+app.use(express.json({ limit: "100kb" }));
 
 // Body parse
 

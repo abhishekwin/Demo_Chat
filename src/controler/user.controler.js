@@ -10,7 +10,9 @@ const secretKey = process.env.JWT_SECRET_KEY;
 
 exports.create = async (req, res) => {
   try {
+    // console.log('lllllll',req.body);
     const { username, email, password, phoneNumber } = req.body;
+    // console.log(username, email, password, phoneNumber);
 
     if (!(email && username && password)) {
       return res.status(400).json({ msg: "Username and Email is required." });
