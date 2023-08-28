@@ -118,3 +118,21 @@ exports.update_User=async(req,res)=>{
     return res.status(401).json({ message: "Token is invalid" });
   }
 };
+
+
+exports.UserDetails=async(req,res)=>{
+  const user  = await User.findOne({where:{id:req.decode.userId}})
+  try {
+    if(user){
+      res.status(200).json({ message: 'User Details',user });
+    }
+    else{
+      res.status(200).json({ message: 'User Not Found' });
+
+    }
+  } catch (error) {
+    res.status(504).json({ message: 'User Not Found' });
+    
+  }
+
+}
