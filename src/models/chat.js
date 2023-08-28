@@ -1,5 +1,4 @@
 'use strict';
-
 const {
   Model
 } = require('sequelize');
@@ -16,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Chat.init({
     chatType: DataTypes.ENUM("GroupChat","OneToOne"),
-    userId: DataTypes.ARRAY(DataTypes.INTEGER),
+        userId: {type:DataTypes.ARRAY(DataTypes.INTEGER),
+          references: { model: "Users", key: "id" }
+       
+        },
     createdBy: DataTypes.STRING,
     title: DataTypes.STRING
   }, {

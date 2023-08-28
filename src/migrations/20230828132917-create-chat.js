@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.ENUM("GroupChat","OneToOne")
       },
       userId: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
+        type: Sequelize.ARRAY(Sequelize.INTEGER),
       },
       createdBy: {
         type: Sequelize.STRING
