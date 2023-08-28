@@ -10,6 +10,7 @@ const db = require("./src/models/index");
 const startServer = async () => {
   try {
     await db.authenticate();
+    app.use("/api", router);
 
     app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);

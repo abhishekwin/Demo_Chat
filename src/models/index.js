@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const dbConfig = require("../config/db.config");  
 const sequelize = new Sequelize(dbConfig.production);
+
 const db = {};
 
 readdirSync(__dirname)
