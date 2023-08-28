@@ -8,6 +8,7 @@ app.use(express.json({ limit: "100kb" }));
 // Body parse
 
 const db = require("./src/models/index");
+const cors = require("cors");
 
 const startServer = async () => {
   try {
