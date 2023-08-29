@@ -33,6 +33,17 @@ exports.create_chat = async (req, res) => {
         .send({ message: "GroupChat added sucessfully", chat })
         .status(200);
     } else {
+      const chatExist = await Chat.findOne({
+        where: {
+          chatType: chatType,
+          createdBy: userDetail.username,
+          userId: userIds,
+        },})
+        if (chatExist) {
+          return res
+            .send({ message: "Chat Already Exist", chatExist })
+            .status(200);
+        }
       const payload = {
         chatType,
         createdBy: userDetail.username,
