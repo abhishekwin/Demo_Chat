@@ -15,9 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Chat.init({
     chatType: DataTypes.ENUM("GroupChat","OneToOne"),
-        userId: {type:DataTypes.ARRAY(DataTypes.INTEGER),
-          references: { model: "Users", key: "id" }
-       
+        userId: {type:DataTypes.ARRAY(DataTypes.INTEGER)
         },
     createdBy: DataTypes.STRING,
     title: DataTypes.STRING

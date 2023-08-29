@@ -27,7 +27,7 @@ exports.create_chat = async (req, res) => {
           .send({ message: "Chat Already Exist", chatExist })
           .status(200);
       }
-      const payload = { chatType, createdBy:userDetail.username, title, userId: userDetail.id };
+      const payload = { chatType, createdBy:userDetail.username, title, userId: [userDetail.id] };
       const chat = await Chat.create(payload);
       return res
         .send({ message: "GroupChat added sucessfully", chat })
