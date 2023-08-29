@@ -37,7 +37,7 @@ exports.create_chat = async (req, res) => {
         where: {
           chatType: chatType,
           createdBy: userDetail.username,
-          userId: userIds,
+          userId:  [userDetail.id,...userIds],
         },})
         if (chatExist) {
           return res
@@ -47,7 +47,7 @@ exports.create_chat = async (req, res) => {
       const payload = {
         chatType,
         createdBy: userDetail.username,
-        userId: userIds,
+        userId: [userDetail.id,...userIds],
       };
       const chat = await Chat.create(payload);
       return res.send({ message: "Chat added sucessfully", chat }).status(200);
