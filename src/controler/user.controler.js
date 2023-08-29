@@ -86,6 +86,8 @@ exports.update_User=async(req,res)=>{
   
 
   try {
+    phoneNumber = req.body.phoneNumber;
+    email = req.body.email;
     // const decode = jwt.verify(token, secretKey); // Replace with your secret key
     const userExist = await User.findOne({where:{id:req.decode.userId}})
     if(!userExist){

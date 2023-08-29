@@ -103,7 +103,7 @@ exports.getChats=async(req,res)=>{
     const user = await User.findOne({ where: { id: req.decode.userId } });
 
     const getChat = await Chat.findAll({where:{createdBy:user.username}})
-    // console.log(getChat,"llllll");
+    console.log(getChat.userId,"llllll");
     // const UserData = await User.findAll({
     //   where:{
     //     id:
