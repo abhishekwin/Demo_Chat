@@ -9,8 +9,9 @@ const { checkTokenExpirationAndVerification } = require("../../middlewares/token
 router.use("/sign_up", user.create);
 router.use("/get_users", user.get_users);
 router.use("/login", user.login);
-router.use("/update_user",user.update_User)
+router.use("/update_user",checkTokenExpirationAndVerification,user.update_User)
 router.use("/userDetails",checkTokenExpirationAndVerification,user.UserDetails)
+router.use("/searchUser",user.searchUser)
 // router.use("/verify_user", checkTokenExpirationAndVerification,user.verifySeller);
 
 // router.use("/forget_password", userPassword.forget_Password);

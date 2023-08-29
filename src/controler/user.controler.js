@@ -7,6 +7,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const secretKey = process.env.JWT_SECRET_KEY;
+const Sequelize = require("sequelize");
 
 exports.create = async (req, res) => {
   try {
@@ -82,19 +83,11 @@ exports.get_users = async (req, res) => {
 };
 
 exports.update_User=async(req,res)=>{
-    const token =
-    req.body.token ||
-    req.query.token ||
-    req.headers.authorization?.split(" ")[1]; // Assuming token is sent in the "Authorization" header
-    
-    const{email,phoneNumber}= req.body;
-  if (!token) {
-    return res.status(401).json({ message: "Token missing" });
-  }
+  
 
   try {
-    const decode = jwt.verify(token, secretKey); // Replace with your secret key
-    const userExist = await User.findOne({where:{id:decode.userId}})
+    // const decode = jwt.verify(token, secretKey); // Replace with your secret key
+    const userExist = await User.findOne({where:{id:req.decode.userId}})
     if(!userExist){
         return res.status(409).send("User not exist");
     }
@@ -135,4 +128,24 @@ exports.UserDetails=async(req,res)=>{
     
   }
 
+}
+
+exports.searchUser= async (req, res) => {
+  try {
+    const searchQuery = req.query.q; // Get the search query from the request query parameters
+console.log( `%${searchQuery}%`);
+    // Use Sequelize to perform the search
+    const users = await User.findAll({
+      where: {
+        username: {
+          [Sequelize.Op.iLike]: searchQuery // Use iLike for case-insensitive search
+        }
+      }
+    });
+
+      res.status(200).json({ message: 'User Found',users });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 }
