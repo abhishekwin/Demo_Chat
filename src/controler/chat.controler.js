@@ -59,20 +59,30 @@ exports.addUsers = async (req, res) => {
     if (!owner) {
       return res.send({ message: "No Open Chats Create One" }).status(404);
     }
+    console.log(usersId.usersId);
     const users = await User.findAll({
       where: {
-        id: usersId.userId, // Use 'Op.contains' operator for array containment
+        id: usersId.usersId, // Use 'Op.contains' operator for array containment
       },
     });
-    if (users.length != usersId.userId.length) {
+    console.log(owner,'ooooooo');
+    if (users.length != usersId.usersId.length) {
        return res.status(404).json({ message: "Users dont exist" });
     } else {
-      owner[0].userId = usersId.userId;
-      await owner[0].save();
+      owner[0].update(
+        {
+          userId: [...usersId.usersId,...owner[0].userId]
+        },
+        {
+          where: {
+            id: owner[0].id
+          }
+        }
+      )
       res.status(200).json({ message: "Succesfull", owner });
     }
   } catch (error) {
-
+console.log(error);
     res.status(500).json({ error: "Error registering chat" });
   }
 };
