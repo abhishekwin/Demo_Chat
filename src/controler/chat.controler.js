@@ -71,7 +71,7 @@ exports.addUsers = async (req, res) => {
     } else {
       owner[0].update(
         {
-          userId: [...usersId.usersId,...owner[0].userId]
+          userId: Array.from(new Set([...usersId.usersId,...owner[0].userId]))
         },
         {
           where: {
