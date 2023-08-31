@@ -48,6 +48,7 @@ exports.create_chat = async (req, res) => {
         chatType,
         createdBy: userDetail.username,
         userId: [userDetail.id,...userIds],
+        title: title
       };
       const chat = await Chat.create(payload);
       return res.send({ message: "Chat added sucessfully", chat }).status(200);
