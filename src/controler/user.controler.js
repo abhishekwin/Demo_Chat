@@ -135,12 +135,13 @@ exports.UserDetails=async(req,res)=>{
 exports.searchUser= async (req, res) => {
   try {
     const searchQuery = req.query.q; // Get the search query from the request query parameters
-console.log( `%${searchQuery}%`);
+
     // Use Sequelize to perform the search
     const users = await User.findAll({
       where: {
         username: {
-          [Sequelize.Op.iLike]: searchQuery // Use iLike for case-insensitive search
+          [Sequelize.Op.iRegexp]: searchQuery // Use iLike for case-insensitive search
+          
         }
       }
     });
