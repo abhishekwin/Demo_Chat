@@ -46,19 +46,35 @@ exports.getMessage = async (req, res) => {
   try {
     const userDetail = await User.findOne({ where: { id: req.decode.userId } });
     const chatDetail = await Chat.findOne({ where: { id: req.query.chatId } });
+    const whereClause = {};
+    if (req.query.chatId) {
+      whereClause.chatid = req.query.chatId;
+    }
+    if (userDetail.id) {
+      whereClause.sender == userDetail.id ||
+        whereClause.receiver == userDetail.id;
+    }
     if (chatDetail.chatType == "OneToOne") {
-      const msgInfo = await Message.findAll({
-        where: { sender: userDetail.id, chatid: req.query.chatId },
-      });
+     
+      
+
+      const msgInfo = await Message.findAll({ where: whereClause });
+
+
+      const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
+      const receiverName = await User.findOne({where:{id:msgInfo[0].receiver}})
+     
       return res
         .status(200)
-        .json({ message: "Message Fetched Succesfully", msgInfo });
+        .json({ message: "Message Fetched Succesfully", Data:msgInfo,sender:senderName.username,receiver:receiverName.username});
     }
-    const msgInfo = await Message.findAll({
-      where: { chatid: req.query.chatId },
-    });
 
-    res.status(200).json({ message: "Succesfull", msgInfo });
+    const msgInfo = await Message.findAll({
+      where:whereClause ,
+    });
+    const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
+
+    res.status(200).json({ message: "Succesfull", msgInfo,sender:senderName.username });
   } catch (error) {
     return res.send({ message: "Error", error }).status(200);
   }
