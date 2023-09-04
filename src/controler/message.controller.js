@@ -59,7 +59,9 @@ exports.getMessage = async (req, res) => {
       
 
       const msgInfo = await Message.findAll({ where: whereClause });
-
+     if (msgInfo.length==0) {
+      return res.status(200).json({message:"No Message Found",msgInfo})
+     }
 
       const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
       const receiverName = await User.findOne({where:{id:msgInfo[0].receiver}})
@@ -73,9 +75,13 @@ exports.getMessage = async (req, res) => {
     const msgInfo = await Message.findAll({
       where:whereClause ,
     });
+    if (msgInfo.length==0) {
+      return res.status(200).json({message:"No Message Found",msgInfo})
+     }
     const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
+    msgInfo[0].sender = senderName.username
 
-    res.status(200).json({ message: "Succesfull", msgInfo,sender:senderName.username });
+    res.status(200).json({ message: "Succesfull", msgInfo });
   } catch (error) {
     console.log(error);
     return res.send({ message: "Error", error }).status(200);
