@@ -63,10 +63,11 @@ exports.getMessage = async (req, res) => {
 
       const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
       const receiverName = await User.findOne({where:{id:msgInfo[0].receiver}})
-     
+     msgInfo[0].sender = senderName.username
+     msgInfo[0].receiver = receiverName.username
       return res
         .status(200)
-        .json({ message: "Message Fetched Succesfully", Data:msgInfo,sender:senderName.username,receiver:receiverName.username});
+        .json({ message: "Message Fetched Succesfully", msgInfo});
     }
 
     const msgInfo = await Message.findAll({
@@ -76,6 +77,7 @@ exports.getMessage = async (req, res) => {
 
     res.status(200).json({ message: "Succesfull", msgInfo,sender:senderName.username });
   } catch (error) {
+    console.log(error);
     return res.send({ message: "Error", error }).status(200);
   }
 };
