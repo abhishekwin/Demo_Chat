@@ -1,7 +1,7 @@
 const {
   models: { Chat, User },
 } = require("../models");
-const Op = require("sequelize");
+const { Op } = require('sequelize');
 const dotenv = require("dotenv");
 dotenv.config();
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -103,19 +103,15 @@ exports.getChats=async(req,res)=>{
   try {
     const user = await User.findOne({ where: { id: req.decode.userId } });
 
-    const getChat = await Chat.findAll({where:{createdBy:user.username}})
-    console.log(getChat.userId,"llllll");
-    // const UserData = await User.findAll({
-    //   where:{
-    //     id:
-    //   }
-    // })
-    if (!getChat) {
+    const getChat = await Chat.findAll({where:{ userId: { [Op.contains]: [user.id] }}})
+    
+    if (getChat.length==0) {
       return res.status(200).json({message:"Chat not exists"})
     } else {
       res.status(200).json({message:"Chats fethched",getChat})
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json({message:"error fething chat",error})
     
   }

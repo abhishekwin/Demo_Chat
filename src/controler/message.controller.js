@@ -5,26 +5,29 @@ const Op = require("sequelize");
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { message, chatId } = req.body;
+    const { message, chatId,receiverId } = req.body;
     const userDetail = await User.findOne({ where: { id: req.decode.userId } });
+    const receverDetail = await User.findOne({ where: { id:receiverId } });
+if (!userDetail || !receverDetail) {
+  return res.status(404).json({ error: 'Sender or receiver not found' });
+}
 
     if (!message && chatId) {
-      return res.status(400).json({ msg: "Message & ChatId is required." });
+      return res.status(404).json({ msg: "Message & ChatId is required." });
     }
     const chatDetail = await Chat.findOne({
-      where: { id: chatId },
+      where: { id: chatId},
     });
     if (!chatDetail) {
       return res.status(200).json({ message: "You Don't have any Chats" });
     }
+    console.log(chatDetail,"LLLLLL");
     if (chatDetail.chatType == "OneToOne") {
-      if (chatDetail.createdBy != userDetail.username) {
-        return res.status(200).json({ message: "You are not owner" });
-      }
-      const receivers = chatDetail.userId[1];
+
+      
       const payload = {
         sender: userDetail.id,
-        receiver: receivers,
+        receiver: receiverId,
         message: message,
         chatid: chatDetail.id,
       };
@@ -71,7 +74,7 @@ exports.getMessage = async (req, res) => {
           {model:User, as: 'userReceiver', attributes: ['id', 'username'] },
         ] 
       });
-      // console.log(msgInfo);
+     
      
       if (msgInfo.length==0) {
       return res.status(200).json({message:"No Message Found",msgInfo})
