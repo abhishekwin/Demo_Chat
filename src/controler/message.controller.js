@@ -1,14 +1,15 @@
 const {
   models: { Chat, User, Message },
 } = require("../models");
-const Op = require("sequelize");
+const { Op } = require('sequelize');
+
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { message, chatId,receiverId } = req.body;
+    const { message, chatId } = req.body;
     const userDetail = await User.findOne({ where: { id: req.decode.userId } });
-    const receverDetail = await User.findOne({ where: { id:receiverId } });
-if (!userDetail || !receverDetail) {
+    // const receverDetail = await User.findOne({ where: { id:receiverId } });
+if (!userDetail) {
   return res.status(404).json({ error: 'Sender or receiver not found' });
 }
 
@@ -16,26 +17,34 @@ if (!userDetail || !receverDetail) {
       return res.status(404).json({ msg: "Message & ChatId is required." });
     }
     const chatDetail = await Chat.findOne({
-      where: { id: chatId},
+      where: { id: chatId, userId: { [Op.contains]: [userDetail.id] }},
     });
+
+
     if (!chatDetail) {
       return res.status(200).json({ message: "You Don't have any Chats" });
     }
-    console.log(chatDetail,"LLLLLL");
-    if (chatDetail.chatType == "OneToOne") {
 
-      
+    if (chatDetail.chatType == "OneToOne") {
+   
       const payload = {
-        sender: userDetail.id,
-        receiver: receiverId,
+        sender: chatDetail.userId[0],
+        receiver: chatDetail.userId[1],
         message: message,
         chatid: chatDetail.id,
-      };
-      const msg = await Message.create(payload);
-      return res
-        .send({ message: "Message added sucessfully", msg })
-        .status(200);
-    }
+       };
+
+ if (!(chatDetail.userId[0]===userDetail.id)){
+
+   payload.sender = chatDetail.userId[1]
+  payload.receiver = chatDetail.userId[0]
+
+}
+const msg = await Message.create(payload);
+return res
+.send({ message: "Message added sucessfully", msg })
+.status(200);
+}
     const payload = { sender: userDetail.id, message, chatid: chatDetail.id };
     const msg = await Message.create(payload);
     return res.send({ message: "Message added sucessfully", msg }).status(200);
