@@ -10,7 +10,23 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      const { User} = models
+      this.belongsTo(User, {
+        foreignKey: "sender",
+        allowNull: false,
+        onDelete: "cascade",
+        onUpdate: "cascade",
+        as: 'userSender'
+      });
+      this.belongsTo(User,{
+        foreignKey: "receiver",
+        allowNull: false,
+        onDelete: "cascade",
+        onUpdate: "cascade",
+        as: 'userReceiver'
+      })
+      // this.hasMany(Product, {foreignKey:"sellerId"})
+      // this.hasMany(addCart, {foreignKey:"userId"})
     }
   }
   Message.init({

@@ -46,40 +46,49 @@ exports.getMessage = async (req, res) => {
   try {
     const userDetail = await User.findOne({ where: { id: req.decode.userId } });
     const chatDetail = await Chat.findOne({ where: { id: req.query.chatId } });
+    
     const whereClause = {};
     if (req.query.chatId) {
-      whereClause.chatid = req.query.chatId;
+      whereClause.chatid = +req.query.chatId;
     }
+    
+    const sender = req.decode.userId;
+
+    console.log(userDetail.id);
+    
     if (userDetail.id) {
       whereClause.sender == userDetail.id ||
         whereClause.receiver == userDetail.id;
     }
+
     if (chatDetail.chatType == "OneToOne") {
      
-      
-
-      const msgInfo = await Message.findAll({ where: whereClause });
-     if (msgInfo.length==0) {
+      console.log(whereClause);
+      const msgInfo = await Message.findAll({
+        where: whereClause,
+        include:[
+          {model:User, as: 'userSender', attributes: ['id', 'username'] },
+          {model:User, as: 'userReceiver', attributes: ['id', 'username'] },
+        ] 
+      });
+      // console.log(msgInfo);
+     
+      if (msgInfo.length==0) {
       return res.status(200).json({message:"No Message Found",msgInfo})
      }
 
-      const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
-      const receiverName = await User.findOne({where:{id:msgInfo[0].receiver}})
-     msgInfo[0].sender = senderName.username
-     msgInfo[0].receiver = receiverName.username
       return res
         .status(200)
         .json({ message: "Message Fetched Succesfully", msgInfo});
     }
 
     const msgInfo = await Message.findAll({
-      where:whereClause ,
+      where:whereClause , include:[
+        {model:User, as: 'userSender', attributes: ['id', 'username'] },]
     });
     if (msgInfo.length==0) {
       return res.status(200).json({message:"No Message Found",msgInfo})
      }
-    const senderName = await User.findOne({where:{id:msgInfo[0].sender}})
-    msgInfo[0].sender = senderName.username
 
     res.status(200).json({ message: "Succesfull", msgInfo });
   } catch (error) {

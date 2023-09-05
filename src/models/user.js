@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      const { Message} = models
+        this.hasOne(Message, {foreignKey:"sender"})
+      this.hasOne(Message, {foreignKey:"receiver"})
     }
   }
   User.init({
