@@ -123,12 +123,18 @@ exports.getGroupUser=async(req,res)=>{
     const ChatId = req.query.id
 console.log(ChatId);
     const getChat = await Chat.findOne({where:{ createdBy: user.username, chatType: "GroupChat", id:ChatId}})
-    
+    const userArray = getChat.userId
     if (!getChat) {
       return res.status(200).json({message:"Chat not exists"})
-    } else {
-      res.status(200).json({message:"Chats fethched",data: getChat.userId})
     }
+    const users = await User.findAll({
+      where: { id: userArray }, // Find users with matching userIds
+      attributes: ['id', 'username', 'email'], // Specify the attributes you want to retrieve
+    });
+    //  else {
+      res.status(200).json({message:"Chats fethched",data: users})
+    
+
   } catch (error) {
     console.log(error);
     res.status(400).json({message:"error fething chat",error})
