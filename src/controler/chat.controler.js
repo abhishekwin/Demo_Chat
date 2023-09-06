@@ -61,33 +61,33 @@ exports.create_chat = async (req, res) => {
 
 exports.addUsers = async (req, res) => {
   try {
-    const usersId = req.body;
-    const title = req.body.title;
+    const {usersId,title} = req.body;
+    console.log(usersId,"LLKKJIOO");
+    // const title = req.body.title;
     const user = await User.findOne({ where: { id: req.decode.userId } });
 
-    const owner = await Chat.findAll({
+    const owner = await Chat.findOne({
       where: { createdBy: user.username, chatType: "GroupChat", title: title },
     });
     if (!owner) {
       return res.send({ message: "No Open Chats Create One" }).status(404);
     }
-    console.log(usersId.usersId);
     const users = await User.findAll({
       where: {
-        id: usersId.usersId, // Use 'Op.contains' operator for array containment
+        id: usersId, // Use 'Op.contains' operator for array containment
       },
     });
     console.log(owner,'ooooooo');
-    if (users.length != usersId.usersId.length) {
+    if (users.length != usersId.length) {
        return res.status(404).json({ message: "Users dont exist" });
     } else {
-      owner[0].update(
+      owner.update(
         {
-          userId: Array.from(new Set([...usersId.usersId,...owner[0].userId]))
+          userId: Array.from(new Set([...usersId,...owner.userId]))
         },
         {
           where: {
-            id: owner[0].id
+            id: owner.id
           }
         }
       )
@@ -116,3 +116,23 @@ exports.getChats=async(req,res)=>{
     
   }
 }
+
+exports.getGroupUser=async(req,res)=>{
+  try {
+    const user = await User.findOne({ where: { id: req.decode.userId } });
+    const ChatId = req.query.id
+console.log(ChatId);
+    const getChat = await Chat.findOne({where:{ createdBy: user.username, chatType: "GroupChat", id:ChatId}})
+    
+    if (!getChat) {
+      return res.status(200).json({message:"Chat not exists"})
+    } else {
+      res.status(200).json({message:"Chats fethched",data: getChat.userId})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({message:"error fething chat",error})
+    
+  }
+}
+

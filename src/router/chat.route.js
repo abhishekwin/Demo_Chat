@@ -6,6 +6,8 @@ const { checkTokenExpirationAndVerification } = require("../../middlewares/token
 router.use("/create_chat", checkTokenExpirationAndVerification,chat.create_chat);
 router.use("/addUsers",checkTokenExpirationAndVerification,chat.addUsers)
 router.use("/getChats",checkTokenExpirationAndVerification,chat.getChats)
+router.use("/getGroupUser",checkTokenExpirationAndVerification,chat.getGroupUser)
+
 
 
 module.exports = router;
