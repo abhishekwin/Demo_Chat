@@ -1,7 +1,7 @@
 const {
   models: { Chat, User },
 } = require("../models");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const dotenv = require("dotenv");
 dotenv.config();
 const secretKey = process.env.JWT_SECRET_KEY;
@@ -27,7 +27,12 @@ exports.create_chat = async (req, res) => {
           .send({ message: "Chat Already Exist", chatExist })
           .status(200);
       }
-      const payload = { chatType, createdBy:userDetail.username, title, userId: [userDetail.id] };
+      const payload = {
+        chatType,
+        createdBy: userDetail.username,
+        title,
+        userId: [userDetail.id],
+      };
       const chat = await Chat.create(payload);
       return res
         .send({ message: "GroupChat added sucessfully", chat })
@@ -37,18 +42,19 @@ exports.create_chat = async (req, res) => {
         where: {
           chatType: chatType,
           createdBy: userDetail.username,
-          userId:  [userDetail.id,...userIds],
-        },})
-        if (chatExist) {
-          return res
-            .send({ message: "Chat Already Exist", chatExist })
-            .status(200);
-        }
+          userId: [userDetail.id, ...userIds],
+        },
+      });
+      if (chatExist) {
+        return res
+          .send({ message: "Chat Already Exist", chatExist })
+          .status(200);
+      }
       const payload = {
         chatType,
         createdBy: userDetail.username,
-        userId: [userDetail.id,...userIds],
-        title: title
+        userId: [userDetail.id, ...userIds],
+        title: title,
       };
       const chat = await Chat.create(payload);
       return res.send({ message: "Chat added sucessfully", chat }).status(200);
@@ -61,8 +67,8 @@ exports.create_chat = async (req, res) => {
 
 exports.addUsers = async (req, res) => {
   try {
-    const {usersId,title} = req.body;
-    console.log(usersId,"LLKKJIOO");
+    const { usersId, title } = req.body;
+    console.log(usersId, "LLKKJIOO");
     // const title = req.body.title;
     const user = await User.findOne({ where: { id: req.decode.userId } });
 
@@ -77,68 +83,67 @@ exports.addUsers = async (req, res) => {
         id: usersId, // Use 'Op.contains' operator for array containment
       },
     });
-    console.log(owner,'ooooooo');
+    console.log(owner, "ooooooo");
     if (users.length != usersId.length) {
-       return res.status(404).json({ message: "Users dont exist" });
+      return res.status(404).json({ message: "Users dont exist" });
     } else {
       owner.update(
         {
-          userId: Array.from(new Set([...usersId,...owner.userId]))
+          userId: Array.from(new Set([...usersId, ...owner.userId])),
         },
         {
           where: {
-            id: owner.id
-          }
+            id: owner.id,
+          },
         }
-      )
+      );
       res.status(200).json({ message: "Succesfull", owner });
     }
   } catch (error) {
-console.log(error);
+    console.log(error);
     res.status(500).json({ error: "Error registering chat" });
   }
 };
 
-exports.getChats=async(req,res)=>{
+exports.getChats = async (req, res) => {
   try {
     const user = await User.findOne({ where: { id: req.decode.userId } });
 
-    const getChat = await Chat.findAll({where:{ userId: { [Op.contains]: [user.id] }}})
-    
-    if (getChat.length==0) {
-      return res.status(200).json({message:"Chat not exists"})
+    const getChat = await Chat.findAll({
+      where: { userId: { [Op.contains]: [user.id] } },
+    });
+
+    if (getChat.length == 0) {
+      return res.status(200).json({ message: "Chat not exists" });
     } else {
-      res.status(200).json({message:"Chats fethched",getChat})
+      res.status(200).json({ message: "Chats fethched", getChat });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).json({message:"error fething chat",error})
-    
+    res.status(400).json({ message: "error fething chat", error });
   }
-}
+};
 
-exports.getGroupUser=async(req,res)=>{
+exports.getGroupUser = async (req, res) => {
   try {
     const user = await User.findOne({ where: { id: req.decode.userId } });
-    const ChatId = req.query.id
-console.log(ChatId);
-    const getChat = await Chat.findOne({where:{ createdBy: user.username, chatType: "GroupChat", id:ChatId}})
-    const userArray = getChat.userId
+    const ChatId = req.query.id;
+    console.log(ChatId);
+    const getChat = await Chat.findOne({
+      where: { createdBy: user.username, chatType: "GroupChat", id: ChatId },
+    });
+    const userArray = getChat.userId;
     if (!getChat) {
-      return res.status(200).json({message:"Chat not exists"})
+      return res.status(200).json({ message: "Chat not exists" });
     }
     const users = await User.findAll({
       where: { id: userArray }, // Find users with matching userIds
-      attributes: ['id', 'username', 'email'], // Specify the attributes you want to retrieve
+      attributes: ["id", "username", "email"], // Specify the attributes you want to retrieve
     });
     //  else {
-      res.status(200).json({message:"Chats fethched",data: users})
-    
-
+    res.status(200).json({ message: "Chats fethched", data: users });
   } catch (error) {
     console.log(error);
-    res.status(400).json({message:"error fething chat",error})
-    
+    res.status(400).json({ message: "error fething chat", error });
   }
-}
-
+};

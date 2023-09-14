@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
       return res.status(409).send("userDetail Already Exist. Please Login");
     }
 
-    const payload = { username, email, phoneNumber };
+    const payload = { username, email, phoneNumber,onlineStatus:true };
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       ...payload,

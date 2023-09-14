@@ -21,6 +21,13 @@ module.exports = {
       phoneNumber: {
         type: Sequelize.BIGINT
       },
+      socketId:{
+       type: Sequelize.STRING,
+       allowNull:true
+      },
+      onlineStatus:{
+       type:Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

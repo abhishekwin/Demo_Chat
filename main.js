@@ -18,11 +18,12 @@ const startServer = async () => {
         origin: "*",
       }),
     );
-    app.use("/api", router); 
+    app.use("/api", router);
 
-    app.listen(port, () => {
+    const ServerSocket = app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
     });
+   require('./socket')(ServerSocket);
   } catch (error) {
     console.error("Error starting the server:", error);
   }

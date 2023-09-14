@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
     chatid: {
       type: DataTypes.INTEGER,
       references: { model: "Chats", key: "id" }
-
     },
     sender: {
       type: DataTypes.INTEGER,

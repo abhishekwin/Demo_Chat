@@ -2,7 +2,7 @@ const {
   models: { Chat, User, Message },
 } = require("../models");
 const { Op } = require('sequelize');
-
+const socketIO = require('socket.io');
 
 exports.sendMessage = async (req, res) => {
   try {
